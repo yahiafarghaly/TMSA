@@ -1,4 +1,4 @@
-
+from sheets_api import sheets_modify_team_ID
 # Author:           Yahia Farghaly (yahiafarghaly@outlook.com)
 # Usage Example:
 # calendar_create_event(calendar_service,'2',
@@ -85,18 +85,35 @@ def calendar_is_team_have_successive_requests(calendar_service, startDate, teamI
     currentDay_start = startDate[0:11] + '01:00:00+02:00'
     currentDay_end = startDate[0:11] + '23:00:00+02:00'
 
-    prevDay = str(int(startDate[8] + startDate[9]) - 1)
-    nextDay = str(int(startDate[8] + startDate[9]) + 1)
+    # a handle like this should be done for month 7 for prevDay
+    print(startDate)
+    if (startDate[8] + startDate[9] == '30'):
+        nextDay = '01'
+        nextMonth = str(int(startDate[5] + startDate[6]) + 1)
+        nextDay_start = startDate[0:5] +'0'+ nextMonth+'-' + nextDay + 'T' + '01:00:00+02:00'
+        nextDay_end = startDate[0:5]   +'0'+nextMonth +'-'+ nextDay + 'T' + '23:00:00+02:00'
+    else:
+        nextDay = str(int(startDate[8] + startDate[9]) + 1)
+        nextDay = sheets_modify_team_ID(nextDay)    # silly -_-
+        nextDay_start = startDate[0:8] + nextDay[0] + nextDay[1] + 'T' + '01:00:00+02:00'
+        nextDay_end = startDate[0:8] + nextDay[0] + nextDay[1] + 'T' + '23:00:00+02:00'
 
-    prevDay_start = startDate[0:8] + prevDay[0] + prevDay[1] + 'T' + '01:00:00+02:00'
-    prevDay_end = startDate[0:8] + prevDay[0] + prevDay[1] + 'T' + '23:00:00+02:00'
+    if (startDate[8] + startDate[9] == '01'):
+        prevDay = '30'
+        prevMonth = str(int(startDate[5] + startDate[6]) - 1)
+        prevDay_start = startDate[0:5] +'0'+ prevMonth+'-' + prevDay + 'T' + '01:00:00+02:00'
+        prevDay_end = startDate[0:5]   +'0'+prevMonth +'-'+ prevDay + 'T' + '23:00:00+02:00'
+    else:
+        prevDay = str(int(startDate[8] + startDate[9]) - 1)
+        prevDay  = sheets_modify_team_ID(prevDay)
+        prevDay_start = startDate[0:8] + prevDay[0] + prevDay[1] + 'T' + '01:00:00+02:00'
+        prevDay_end = startDate[0:8] + prevDay[0] + prevDay[1] + 'T' + '23:00:00+02:00'
 
-    nextDay_start = startDate[0:8] + nextDay[0] + nextDay[1] + 'T' + '01:00:00+02:00'
-    nextDay_end = startDate[0:8] + nextDay[0] + nextDay[1] + 'T' + '23:00:00+02:00'
 
     current_IDs = calender_get_teamIDs(calendar_service, currentDay_start, currentDay_end)
     prev_IDs = calender_get_teamIDs(calendar_service, prevDay_start, prevDay_end)
     next_IDs = calender_get_teamIDs(calendar_service, nextDay_start, nextDay_end)
+
 
 
     # for id in current_IDs:
@@ -107,9 +124,6 @@ def calendar_is_team_have_successive_requests(calendar_service, startDate, teamI
     #
     # for id in next_IDs:
     #     print("next:",id['summary'][5:7])
-
-    if not current_IDs:
-        return 0 # today is free
 
     reserved = False
     for id in current_IDs:

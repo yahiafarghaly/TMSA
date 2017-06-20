@@ -6,10 +6,10 @@ import datetime
 import time
 
 from apiclient import discovery
-from credentials import sheets_get_credentials
-from credentials import calendar_get_credentials
+from credentials import *
 from calendar_api import *
 from sheets_api import *
+from gmail_api import *
 from testcases import *
 
 
@@ -27,6 +27,11 @@ def main():
     calendar_http = calendar_credentials.authorize(httplib2.Http())
     calendar_service = discovery.build('calendar', 'v3', http=calendar_http)
 
+    gmail_credentials = gmail_get_credentials()
+    gmail_http = gmail_credentials.authorize(httplib2.Http())
+    gmail_service = discovery.build('gmail', 'v1', http=gmail_http)
+
+
     while(True):
         values = retrieve_first_row(sheets_service)
         if not values:
@@ -35,7 +40,7 @@ def main():
             # row[0] => userName
             # row[1] => Date day
             # row[2] => Time
-            # row[3] => FB account
+            # row[3] => email account
             # row[4] => TeamID
             # row[5] => Request Type ( 'Reserve' , 'Delete' )
             for row in values:
@@ -43,25 +48,26 @@ def main():
                 team_id = sheets_modify_team_ID(row[4])
                 request_res = calendar_is_team_have_successive_requests(calendar_service,startDate,team_id)
                 if(request_res == 1):
-                    print('You have already reserved for this day')
+                    message = 'Reservation Repeat Conflict: Failed , Reason: ( Already reserved for this day )'
+                    message = message + os.linesep + 'No event is created' + os.linesep
                 elif(request_res == 2):
-                    print('You have already reserved for a day before')
+                    message = 'Reservation Repeat Conflict: Failed , Reason: ( Already reserved for a day before )'
+                    message = message + os.linesep + 'No event is created' + os.linesep
                 elif(request_res == 3):
-                    print('You have already reserved for a day after')
+                    message = 'Reservation Repeat Conflict: Failed , Reason: ( Already reserved for a day after )'
+                    message = message + os.linesep + 'No event is created' + os.linesep
                 else:
-                    print ("No Reservation Conflict is found")
+                    message = 'Reservation Repeat Conflict: Passed ' + os.linesep
                     if(calendar_is_conflict_v2(calendar_service,startDate,endDate)):
-                        # send fb message
-                        print('Team Confict is found for team# ', team_id,'Time: ',row[1]+'-'+row[2])
+                        message = message + 'Team Confict is found for team# ' + team_id + ' ,Time: ' + row[1]+'-'+row[2] + os.linesep
                     else:
-                        # send fb message
                         calendar_create_event(calendar_service,team_id,startDate,endDate)
-                        print ('An event is reserved for team#',team_id)
+                        message = message + 'An event is reserved for team#' + team_id + ' ,Time: ' + row[1]+'-'+row[2] + os.linesep
+
+                msg = CreateMessage("dspserver2017@gmail.com", row[3], 'Server Access Request Response(team#' + team_id + ')' ,message)
+                SendMessage(gmail_service, "me", msg)
                 delete_first_row(sheets_service)
-    time.sleep(1)
-
-
-
+        time.sleep(5) #To avoid exhuasting available quotas
 
 
 if __name__ == '__main__':
