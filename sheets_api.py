@@ -63,37 +63,29 @@ def convert_date_to_iso_format(date,time):
 def convert_time_range_24_format(time):
     startTime = '00'
     endTime = '00'
-    if (time == '12:00 PM to 3:00 PM'):
+    if (time == '12:00 AM to 3:55 AM'):
+        startTime = '00:00:00+02:00'
+        endTime   = '03:55:00+02:00'
+
+    elif (time == '4:00 AM to 7:55 AM'):
+        startTime = '04:00:00+02:00'
+        endTime   = '07:55:00+02:00'
+
+    elif (time == '8:00 AM to 11:55 AM'):
+        startTime = '08:00:00+02:00'
+        endTime   = '11:55:00+02:00'
+
+    elif (time == '12:00 PM to 3:55 PM'):
         startTime = '12:00:00+02:00'
-        endTime   = '15:00:00+02:00'
+        endTime   = '15:55:00+02:00'
 
-    elif (time == '3:15 PM to 6:15 PM'):
-        startTime = '15:15:00+02:00'
-        endTime   = '18:15:00+02:00'
+    elif (time == '4:00 PM to 7:55 PM'):
+        startTime = '16:00:00+02:00'
+        endTime   = '19:55:00+02:00'
 
-    elif (time == '6:30 PM to 9:30 PM'):
-        startTime = '18:30:00+02:00'
-        endTime   = '21:30:00+02:00'
-
-    elif (time == '9:45 PM to 12:45 AM'):
-        startTime = '21:45:00+02:00'
-        endTime   = '00:45:00+02:00'
-
-    elif (time == '1:00 AM to 3:00 AM'):
-        startTime = '01:00:00+02:00'
-        endTime   = '03:00:00+02:00'
-
-    elif (time == '3:15 AM to 5:15 AM'):
-        startTime = '03:15:00+02:00'
-        endTime   = '05:15:00+02:00'
-
-    elif (time == '5:30 AM to 8:30 AM'):
-        startTime = '05:30:00+02:00'
-        endTime   = '08:30:00+02:00'
-
-    elif (time == '8:45 AM to 11:45 AM'):
-        startTime = '08:45:00+02:00'
-        endTime   = '11:45:00+02:00'
+    elif (time == '8:00 PM to 11:55 PM'):
+        startTime = '20:00:00+02:00'
+        endTime   = '23:55:00+02:00'
 
     return startTime,endTime
 

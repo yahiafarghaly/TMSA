@@ -47,22 +47,16 @@ def main():
                 startDate,endDate = convert_date_to_iso_format(row[1],row[2])
                 team_id = sheets_modify_team_ID(row[4])
                 request_res = calendar_is_team_have_successive_requests(calendar_service,startDate,team_id)
-                if(request_res == 1):
-                    message = 'Reservation Repeat Conflict: Failed , Reason: ( Already reserved for this day )'
-                    message = message + os.linesep + 'No event is created' + os.linesep
-                elif(request_res == 2):
-                    message = 'Reservation Repeat Conflict: Failed , Reason: ( Already reserved for a day before )'
-                    message = message + os.linesep + 'No event is created' + os.linesep
-                elif(request_res == 3):
-                    message = 'Reservation Repeat Conflict: Failed , Reason: ( Already reserved for a day after )'
-                    message = message + os.linesep + 'No event is created' + os.linesep
+
+                if(request_res == 3 or request_res == 2 or request_res == 1):
+                    message = 'You already have another reservation within 2 days. Only 1 time slot is allowed every 2 days.' + os.linesep+ 'Please check the updated calender and reserve another time slot !' + os.linesep + 'No event is created' + os.linesep
                 else:
-                    message = 'Reservation Repeat Conflict: Passed ' + os.linesep
                     if(calendar_is_conflict_v2(calendar_service,startDate,endDate)):
-                        message = message + 'Team Confict is found for team# ' + team_id + ' ,Time: ' + row[1]+'-'+row[2] + os.linesep
+                    	message = 'The time slot you requested is already reserved for another team.' + os.linesep + ' Please check the updated calender and reserve another time slot !' + os.linesep
+                        message = message + 'Conflict Time: ' + row[1]+'-'+row[2] + os.linesep
                     else:
                         calendar_create_event(calendar_service,team_id,startDate,endDate)
-                        message = message + 'An event is reserved for team#' + team_id + ' ,Time: ' + row[1]+'-'+row[2] + os.linesep
+                        message = 'Reservation Status :  Success '+ os.linesep + 'Time: ' + row[1]+'-'+row[2] + os.linesep
 
                 msg = CreateMessage("dspserver2017@gmail.com", row[3], 'Server Access Request Response(team#' + team_id + ')' ,message)
                 SendMessage(gmail_service, "me", msg)

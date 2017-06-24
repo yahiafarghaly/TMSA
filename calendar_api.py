@@ -94,7 +94,7 @@ def calendar_is_team_have_successive_requests(calendar_service, startDate, teamI
         nextDay_end = startDate[0:5]   +'0'+nextMonth +'-'+ nextDay + 'T' + '23:00:00+02:00'
     else:
         nextDay = str(int(startDate[8] + startDate[9]) + 1)
-        nextDay = sheets_modify_team_ID(nextDay)    # silly -_-
+        nextDay = sheets_modify_team_ID(nextDay)    # silly -_- regardless the name,it does the job
         nextDay_start = startDate[0:8] + nextDay[0] + nextDay[1] + 'T' + '01:00:00+02:00'
         nextDay_end = startDate[0:8] + nextDay[0] + nextDay[1] + 'T' + '23:00:00+02:00'
 

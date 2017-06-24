@@ -44,6 +44,7 @@ def sheets_get_credentials():
         Credentials, the obtained credential.
     """
     home_dir = os.path.expanduser('~')
+    home_dir = '/home/yahia/'
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
@@ -72,6 +73,7 @@ def calendar_get_credentials():
         Credentials, the obtained credential.
     """
     home_dir = os.path.expanduser('~')
+    home_dir = '/home/yahia/'
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
@@ -115,6 +117,7 @@ def drive_get_credentials():
         Credentials, the obtained credential.
     """
     home_dir = os.path.expanduser('~')
+    home_dir = '/home/yahia/'
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
@@ -157,6 +160,7 @@ def gmail_get_credentials():
         Credentials, the obtained credential.
     """
     home_dir = os.path.expanduser('~')
+    home_dir = '/home/yahia/'
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
