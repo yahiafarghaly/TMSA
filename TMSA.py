@@ -14,6 +14,9 @@ from testcases import *
 
 
 def main():
+    # In case this software will be used at the start up of the linux, make sure to add some delay before executing it
+    # to give your OS sometimes to prepare environment variable and network connection establishment.
+    # time.sleep(60) # 1 min for example is enough for that
     # Google sheet service initialization
     sheets_credentials = sheets_get_credentials()
     sheets_http = sheets_credentials.authorize(httplib2.Http())
@@ -61,9 +64,14 @@ def main():
                 msg = CreateMessage("dspserver2017@gmail.com", row[3], 'Server Access Request Response(team#' + team_id + ')' ,message)
                 SendMessage(gmail_service, "me", msg)
                 delete_first_row(sheets_service)
-        time.sleep(5) #To avoid exhuasting available quotas
+        time.sleep(10) #To avoid exhuasting available quotas
 
 
 if __name__ == '__main__':
-    main()
-    #test_calendar_conflict()
+	while(True):
+		print('starting TMSA Main')
+		try:
+  			main()
+		except Exception: 
+  			print('exception occured,restart...')
+  			pass
